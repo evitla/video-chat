@@ -16,7 +16,6 @@ const usePeerOnAnswer = ({
 
     peer.on('call', (call: any) => {
       setPeers((prev: any) => ({ ...prev, [call.peer]: call }));
-      console.log('answer call from:', call.peer);
 
       call.answer(stream);
 

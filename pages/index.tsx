@@ -1,12 +1,13 @@
+import { useState } from 'react';
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { v4 as uuid } from 'uuid';
 
 import { JoinRoom, WelcomeContainer } from '../components';
-import { CameraIcon } from '../assets/icons';
-import { Button, JoinButton } from '../components/style';
+import { JoinButton } from '../components/style';
 
 const Home: NextPage = () => {
+  const [value, setValue] = useState('');
   return (
     <WelcomeContainer>
       <div className="mt-5 sm:flex sm:justify-center lg:justify-start">
@@ -16,8 +17,10 @@ const Home: NextPage = () => {
           </button>
         </Link>
 
-        <JoinRoom />
-        <JoinButton disabled={true}>Join</JoinButton>
+        <JoinRoom setValue={setValue} />
+        <Link href={value.length > 0 ? `/qora/${value}` : '/'}>
+          <JoinButton>Join</JoinButton>
+        </Link>
       </div>
     </WelcomeContainer>
   );
