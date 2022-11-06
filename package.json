@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "engines": {
-    "node": "18.12.1"
+    "node": ">=10"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.7.0",
