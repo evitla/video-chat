@@ -1,31 +1,30 @@
 import { useContext } from 'react';
-
-import {
-  ChatAltIcon as ChatIcon,
-  ArrowsExpandIcon,
-} from '@heroicons/react/outline';
+import Tooltip from 'react-tooltip';
 import {
   VideoCameraIcon,
   MicrophoneIcon,
   PhoneMissedCallIcon as HangUpIcon,
   UploadIcon as ShareScreenIcon,
 } from '@heroicons/react/solid';
-import { UsersConnectionContext } from 'contexts/users-connection';
-import { UsersStateContext } from 'contexts/users-settings';
-import Tooltip from 'react-tooltip';
+import {
+  ChatAltIcon as ChatIcon,
+  ArrowsExpandIcon,
+} from '@heroicons/react/outline';
 
 import CrossLineDiv from '@common/components/cross-line-div';
+import { UsersStateContext } from 'contexts/users-settings';
+import { UsersConnectionContext } from 'contexts/users-connection';
+import { Kind } from '@common/types';
+import { MediaConnection } from 'peerjs';
 
 const ControlPanel = ({
   muted,
   visible,
   chat,
-  status,
   screenTrack,
-  screen,
   onToggle,
   onLeave,
-}: any) => {
+}: ControlPanelProps) => {
   const { sharedScreenTrack: shared, streams } = useContext(UsersStateContext);
   const { users } = useContext(UsersConnectionContext);
 
@@ -77,7 +76,7 @@ const ControlPanel = ({
           onClick={() => onToggle('screen')}
           disabled={shared}
           className={`${common} ${
-            screen
+            screenTrack || shared
               ? 'bg-emerald-600 hover:bg-emerald-500'
               : 'bg-slate-800 hover:bg-emerald-700'
           }`}
@@ -112,9 +111,24 @@ const ControlPanel = ({
 
 export default ControlPanel;
 
+type ControlPanelProps = {
+  muted: boolean;
+  visible: boolean;
+  chat: boolean;
+  screenTrack: boolean;
+  onToggle: (kind: Kind, users?: MediaConnection[]) => Promise<void>;
+  onLeave: () => void;
+};
+
 const common = 'p-3 rounded-xl text-white';
 
-const ParticipantsCount = ({ count, onClick }: any) => {
+const ParticipantsCount = ({
+  count,
+  onClick,
+}: {
+  count: number;
+  onClick: () => void;
+}) => {
   return (
     <div className="inline-block relative">
       <button

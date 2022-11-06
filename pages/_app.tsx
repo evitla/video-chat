@@ -1,22 +1,29 @@
-import { useState } from 'react';
+import Head from 'next/head';
 import type { AppProps } from 'next/app';
+import { createContext } from 'react';
 import { UserProvider } from '@auth0/nextjs-auth0';
-
-import { SocketContext } from '../hooks/use-socket-context';
-import { TSocket } from '../common/types';
+import { io } from 'socket.io-client';
 
 import '../styles/globals.css';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const [socket, setSocket] = useState<TSocket | null>(null);
+const socket = io('/', { path: '/api/socketio' });
+export const SocketContext = createContext(socket);
 
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <UserProvider>
-      <SocketContext.Provider value={{ socket, setSocket }}>
-        <Component {...pageProps} />
-      </SocketContext.Provider>
-    </UserProvider>
+    <>
+      <Head>
+        <link
+          type="text/css"
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/react-toastify@9.0.6/dist/ReactToastify.css"
+        />
+      </Head>
+      <UserProvider>
+        <SocketContext.Provider value={socket}>
+          <Component {...pageProps} />
+        </SocketContext.Provider>
+      </UserProvider>
+    </>
   );
 }
-
-export default MyApp;
